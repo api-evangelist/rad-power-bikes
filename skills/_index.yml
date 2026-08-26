@@ -1,0 +1,32 @@
+generated: '2026-08-26'
+method: generated
+source: mcp/rad-power-bikes-tools-list.json (live tools/list 2026-08-26)
+note: >-
+  Grounded in the 13 real tool names returned by the live MCP endpoint, plus the store's own
+  published agent rules in llms.txt and robots.txt. No operation name here was invented; the
+  provider publishes no OpenAPI, so the MCP manifest is the contract these skills bind to.
+skills:
+- name: rad-power-bikes-catalog-research
+  file: rad-power-bikes-catalog-research.md
+  summary: Read-only catalog search, lookup and product detail. Safe to run unattended.
+  operations:
+  - search_catalog
+  - lookup_catalog
+  - get_product
+- name: rad-power-bikes-guided-purchase
+  file: rad-power-bikes-guided-purchase.md
+  summary: >-
+    Cart to checkout with a mandatory human approval step before payment, and an explicit
+    note that no post-completion reversal tool exists.
+  operations:
+  - search_catalog
+  - create_cart
+  - update_cart
+  - get_cart
+  - cancel_cart
+  - create_checkout
+  - update_checkout
+  - get_checkout
+  - complete_checkout
+  - cancel_checkout
+  - get_order

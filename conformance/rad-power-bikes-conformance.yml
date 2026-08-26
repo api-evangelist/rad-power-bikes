@@ -1,0 +1,113 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://www.radpowerbikes.com/.well-known/ucp,
+  https://www.radpowerbikes.com/.well-known/openid-configuration,
+  https://www.radpowerbikes.com/.well-known/oauth-protected-resource,
+  https://www.radpowerbikes.com/api/ucp/mcp,
+  https://www.radpowerbikes.com/products/abus-adaptor-chain-130-cm
+summary: >-
+  Every conformance row below is asserted from a document fetched from a Rad Power Bikes
+  host, not from a marketing claim. The store speaks three machine-readable standards it did
+  not have to speak - MCP, UCP and schema.org Product/Offer - and none of the enterprise
+  compliance regimes.
+standards:
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: >-
+    POST https://www.radpowerbikes.com/api/ucp/mcp with
+    {"jsonrpc":"2.0","id":1,"method":"tools/list"} returned HTTP 200 and a well-formed MCP
+    result with 13 tools, each carrying a JSON Schema draft 2020-12 inputSchema.
+- id: json-rpc-2.0
+  name: JSON-RPC 2.0
+  conforms: true
+  evidence: Response envelope carried jsonrpc "2.0" and echoed the request id.
+- id: json-schema-2020-12
+  name: JSON Schema draft 2020-12
+  conforms: true
+  evidence: Every tool inputSchema declares $schema https://json-schema.org/draft/2020-12/schema.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence: >-
+    /.well-known/oauth-authorization-server (HTTP 200) declares authorization_code and
+    refresh_token grants against account.radpowerbikes.com.
+- id: oidc
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence: >-
+    /.well-known/openid-configuration (HTTP 200) with issuer, jwks_uri, RS256 id_token
+    signing, and the openid scope.
+- id: rfc7636-pkce
+  name: PKCE (RFC 7636)
+  conforms: true
+  evidence: code_challenge_methods_supported = ["S256"].
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata (RFC 9728)
+  conforms: true
+  evidence: >-
+    /.well-known/oauth-protected-resource served on both www.radpowerbikes.com and
+    account.radpowerbikes.com, each naming its authorization servers and header bearer method.
+- id: idempotency
+  name: Idempotent write semantics
+  conforms: true
+  evidence: complete_checkout requires meta.idempotency-key in its inputSchema.
+- id: pagination
+  name: Cursor pagination
+  conforms: true
+  evidence: search_catalog documents pagination.cursor for subsequent pages.
+- id: rfc9457
+  name: Problem Details for HTTP APIs (RFC 9457)
+  conforms: false
+  evidence: No application/problem+json surface; errors are JSON-RPC error objects.
+- id: rfc9116
+  name: security.txt (RFC 9116)
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 on both hosts.
+- id: rfc8594
+  name: Sunset header (RFC 8594)
+  conforms: false
+  evidence: No Sunset or Deprecation headers observed; no deprecation policy published.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json both 404 on both hosts.
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence: >-
+    /openapi.json, /openapi.yaml, /swagger.json and /api-docs all 404 or return the Shopify
+    HTML shell. No OpenAPI is published by this provider.
+domain_standards:
+- id: ucp
+  name: Universal Commerce Protocol (UCP) 2026-04-08
+  market: agentic retail commerce
+  conforms: true
+  declared_in: https://www.radpowerbikes.com/.well-known/ucp
+  evidence: >-
+    The merchant profile declares service dev.ucp.shopping over transport "mcp" and
+    capabilities dev.ucp.shopping.checkout, .cart, .order, .fulfillment, .discount,
+    .catalog.search, .catalog.lookup plus the dev.shopify.catalog extension - each bound to
+    a published spec and JSON Schema URL on ucp.dev. Payment handlers com.google.pay,
+    dev.shopify.card and dev.shopify.shop_pay are declared with versioned config schemas.
+  why_it_matters: >-
+    A buying agent that already speaks UCP can transact with this store with no bespoke
+    connector; one that does not needs a bilateral integration against a surface that has no
+    OpenAPI at all.
+- id: schema-org-product
+  name: schema.org Product / Offer (JSON-LD)
+  market: retail product discovery
+  conforms: true
+  declared_in: https://www.radpowerbikes.com/products/abus-adaptor-chain-130-cm
+  evidence: >-
+    Product pages embed application/ld+json with @type Product, an offers[] array carrying
+    @type Offer, price, priceCurrency, priceValidUntil, sku, availability and a
+    QuantitativeValue weight, plus a BreadcrumbList graph.
+compliance_certifications: []
+compliance_note: >-
+  No trust center, SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP attestation is published on
+  any Rad Power Bikes host. trust.radpowerbikes.com does not resolve and
+  /pages/trust returns 404. Card data never touches the merchant surface directly - payment
+  instruments are issued by Shop Pay, Shopify card or Google Pay handlers - but no
+  certification is claimed, so none is recorded.

@@ -1,0 +1,76 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://www.radpowerbikes.com/.well-known/openid-configuration,
+  https://www.radpowerbikes.com/.well-known/oauth-protected-resource,
+  https://www.radpowerbikes.com/api/ucp/mcp (anonymous tools/list, HTTP 200)
+summary: >-
+  Two distinct auth postures. The UCP/MCP commerce surface is ANONYMOUS — tools/list and the
+  catalog/cart/checkout tools answered without any credential. Buyer identity, when needed,
+  is carried by an OpenID Connect authorization-code + PKCE flow against Shopify Customer
+  Accounts on the merchant's own account.radpowerbikes.com host. There is no API-key program
+  and no developer key issuance of any kind.
+schemes:
+- id: anonymous-mcp
+  type: none
+  applies_to: https://www.radpowerbikes.com/api/ucp/mcp
+  description: >-
+    The UCP shopping MCP endpoint accepts unauthenticated JSON-RPC. Requests carry a
+    meta.ucp-agent.profile URI identifying the calling agent rather than a bearer token.
+    Payment credentials are supplied per-checkout as payment instruments issued by a
+    payment handler (Shop Pay, Shopify card, Google Pay), not as an account credential.
+  evidence:
+    http_status: 200
+    probed: '2026-08-26'
+- id: shopify-customer-accounts-oidc
+  type: openIdConnect
+  openIdConnectUrl: https://www.radpowerbikes.com/.well-known/openid-configuration
+  issuer: https://shopify.com/authentication/7999645
+  authorization_endpoint: https://account.radpowerbikes.com/authentication/oauth/authorize
+  token_endpoint: https://account.radpowerbikes.com/authentication/oauth/token
+  jwks_uri: https://account.radpowerbikes.com/authentication/.well-known/jwks.json
+  end_session_endpoint: https://account.radpowerbikes.com/authentication/logout
+  grant_types:
+  - authorization_code
+  - refresh_token
+  - 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+  response_types:
+  - code
+  pkce:
+  - S256
+  token_endpoint_auth_methods:
+  - client_secret_basic
+  - client_secret_post
+  id_token_signing_alg:
+  - RS256
+  scopes:
+  - openid
+  - email
+  - customer-account-api:full
+  - customer-account-mcp-api:full
+  description: >-
+    Shopify Customer Accounts OIDC, provisioned for shop 7999645 and served from the
+    merchant's own account.radpowerbikes.com host. Client registration is not open to the
+    public; these are the credentials a storefront/app uses on the buyer's behalf.
+protected_resources:
+- resource: https://www.radpowerbikes.com
+  authorization_servers:
+  - https://account.radpowerbikes.com
+  - https://shopify.com/authentication/7999645
+  bearer_methods_supported:
+  - header
+  rfc: RFC 9728
+- resource: https://account.radpowerbikes.com
+  authorization_servers:
+  - https://account.radpowerbikes.com
+  - https://shopify.com/authentication/7999645
+  bearer_methods_supported:
+  - header
+  rfc: RFC 9728
+api_keys: false
+mtls: false
+notes:
+- No developer portal, no API key signup, no partner credential program was found.
+- >-
+  Checkout completion is gated on human buyer approval by published policy, not by an
+  authentication scheme.

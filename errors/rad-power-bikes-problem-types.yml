@@ -1,0 +1,48 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  mcp/rad-power-bikes-tools-list.json (live tools/list 2026-08-26),
+  https://www.radpowerbikes.com/llms.txt
+format: json-rpc
+rfc9457: false
+summary: >-
+  Rad Power Bikes publishes no error reference. This catalog records ONLY the error surface
+  that is observable from the live MCP manifest and the store's own agent instructions - the
+  JSON-RPC 2.0 envelope, the one documented HTTP status, and the one tool that says in its
+  own description that it returns errors in the result payload. No error codes, titles or
+  remediation text are invented here, because none are published.
+envelope:
+  transport_errors: >-
+    JSON-RPC 2.0 error object on the response - {"jsonrpc":"2.0","id":<id>,"error":{"code":
+    <int>,"message":<string>}}. Standard JSON-RPC codes apply (-32700 parse error, -32600
+    invalid request, -32601 method not found, -32602 invalid params, -32603 internal error);
+    these are the protocol's, not the provider's, and the provider does not restate them.
+  tool_errors: >-
+    complete_checkout states it "Returns details about the completed checkout, including
+    order ID, Thank You Page URL, or any errors encountered" - business failures are carried
+    inside the successful result payload rather than as JSON-RPC errors.
+problem_types:
+- id: rate-limited
+  status: 429
+  title: Rate limited
+  detail: The MCP endpoint is rate-limited per IP.
+  remediation: Back off and retry with exponential delay.
+  source: https://www.radpowerbikes.com/llms.txt
+  method: searched
+- id: checkout-completion-error
+  status: 200
+  title: Checkout completion error
+  detail: >-
+    Errors encountered while completing a checkout are returned in the complete_checkout
+    result alongside order ID and Thank You Page URL. The provider publishes no enumeration
+    of these errors.
+  remediation: >-
+    Inspect the result payload before treating a 200 as a completed order; re-submit with the
+    same meta.idempotency-key rather than creating a new checkout.
+  source: mcp/rad-power-bikes-tools-list.json
+  method: derived
+gaps:
+- No published error-code registry or error reference page.
+- No RFC 9457 application/problem+json surface.
+- No documented Retry-After on 429.
+- No enumeration of checkout, payment or fulfillment failure reasons.

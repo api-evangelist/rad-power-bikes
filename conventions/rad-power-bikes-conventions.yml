@@ -1,0 +1,136 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  mcp/rad-power-bikes-tools-list.json (live tools/list, 2026-08-26),
+  https://www.radpowerbikes.com/llms.txt, https://www.radpowerbikes.com/robots.txt,
+  https://www.radpowerbikes.com/.well-known/ucp
+summary: >-
+  Cross-cutting runtime semantics of the Rad Power Bikes UCP/MCP commerce surface, derived
+  from the live tool input schemas and the store's own published agent instructions. There
+  is no REST OpenAPI, so all conventions below describe the MCP/JSON-RPC surface.
+transport:
+  protocol: JSON-RPC 2.0 over HTTP POST (MCP)
+  endpoint: https://www.radpowerbikes.com/api/ucp/mcp
+  content_type: application/json
+  accept: application/json, text/event-stream
+auth_style:
+  style: anonymous
+  agent_identity: >-
+    Every tool requires meta.ucp-agent.profile — a URI identifying the calling agent's UCP
+    profile. This is an identity declaration, not a credential; it is required on all 13
+    tools.
+  detail: authentication/rad-power-bikes-authentication.yml
+idempotency:
+  supported: true
+  mechanism: request field
+  field: meta.idempotency-key
+  type: string
+  required_on:
+  - complete_checkout
+  scope: per checkout completion
+  retention: not stated
+  evidence: >-
+    complete_checkout inputSchema declares meta.idempotency-key ("An idempotency key for
+    completing the checkout") and lists it in meta.required alongside ucp-agent — the only
+    tool of the 13 that requires it, and the only one that moves money.
+  note: >-
+    Retention/replay window is not published. The other 12 tools declare no idempotency key;
+    cart and checkout mutations are addressed by resource id instead.
+pagination:
+  style: cursor
+  request_field: catalog.pagination.cursor
+  response_field: pagination.cursor
+  evidence: >-
+    search_catalog: "Results are paginated, with initial results limited to improve
+    experience. Use the pagination.cursor from the response to fetch additional pages."
+  page_size: not published
+money:
+  representation: integer minor units + ISO 4217 currency code
+  shape: '{"amount": 2500, "currency": "USD"} == $25.00'
+  note: >-
+    Every tool description repeats the minor-units rule verbatim and instructs the agent to
+    convert to major units before quoting a price to a buyer. Zero-decimal currencies (JPY)
+    are already whole units.
+buyer_context:
+  fields:
+  - context.address_country
+  - context.currency
+  note: llms.txt instructs agents to pass buyer context for accurate pricing and availability.
+versioning:
+  scheme: date-based protocol version
+  current: '2026-04-08'
+  supported:
+  - '2026-04-08'
+  - '2026-01-23'
+  discovery: https://www.radpowerbikes.com/.well-known/ucp
+  detail: lifecycle/rad-power-bikes-lifecycle.yml
+error_envelope:
+  shape: JSON-RPC 2.0 error object; tool-level failures also returned in the result payload
+  note: >-
+    complete_checkout "Returns details about the completed checkout, including order ID,
+    Thank You Page URL, or any errors encountered." No RFC 9457 problem+json surface exists.
+  detail: errors/rad-power-bikes-problem-types.yml
+rate_limit_signaling:
+  documented: true
+  numbers_published: false
+  scope: per IP
+  signal: 429 with agent-side backoff
+  evidence: 'llms.txt: "The MCP endpoint is rate-limited per IP. Back off on 429 responses."'
+  headers: not published
+  detail: rate-limits/rad-power-bikes-rate-limits.yml
+dry_run_mode:
+  supported: false
+  grade: absent
+  note: >-
+    No dry-run, preview or simulate flag exists on any tool. create_checkout is itself the
+    rehearsal step — it returns totals, taxes and discounts without charging — but it is a
+    real resource creation, not a simulation.
+reversibility:
+  grade: documented
+  na: false
+  note: >-
+    Reversal operations exist and are first-class tools, but NO window is published anywhere
+    in the tool schemas, agents.md, llms.txt or the UCP discovery document. Refund is not
+    exposed as a tool at all — once complete_checkout succeeds, the agent's surface is
+    read-only (get_order) and any reversal moves to the store's human refund policy.
+  surfaces:
+  - write_operation: create_cart
+    reversal: cancel_cart
+    operationId: cancel_cart
+    window: not stated
+    docs: https://www.radpowerbikes.com/agents.md
+  - write_operation: update_cart
+    reversal: cancel_cart
+    operationId: cancel_cart
+    window: not stated
+    docs: https://www.radpowerbikes.com/agents.md
+  - write_operation: create_checkout
+    reversal: cancel_checkout
+    operationId: cancel_checkout
+    window: not stated
+    docs: https://www.radpowerbikes.com/agents.md
+  - write_operation: update_checkout
+    reversal: cancel_checkout
+    operationId: cancel_checkout
+    window: not stated
+    docs: https://www.radpowerbikes.com/agents.md
+  - write_operation: complete_checkout
+    reversal: none exposed
+    operationId: ''
+    window: not stated
+    docs: https://www.radpowerbikes.com/policies/refund-policy
+    note: >-
+      No refund, void or reverse tool is published. Post-completion reversal is handled by
+      the store's human refund policy, whose terms are not restated in machine-readable
+      form. This is the sharpest agent-readiness gap on the surface: the one irreversible
+      action is the one the protocol makes easiest to reach.
+  human_approval_gate: >-
+    robots.txt and llms.txt both require an explicit, contemporaneous human approval step
+    before any checkout, payment or order placement. That gate is the store's substitute for
+    a published reversal window.
+cross_links:
+  errors: errors/rad-power-bikes-problem-types.yml
+  lifecycle: lifecycle/rad-power-bikes-lifecycle.yml
+  authentication: authentication/rad-power-bikes-authentication.yml
+  rate_limits: rate-limits/rad-power-bikes-rate-limits.yml
+  data_model: data-model/rad-power-bikes-data-model.yml

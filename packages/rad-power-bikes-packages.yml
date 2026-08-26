@@ -1,0 +1,22 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  registry.npmjs.org search, pypi.org, https://www.radpowerbikes.com/agents.md,
+  https://www.radpowerbikes.com/llms.txt
+package_count: 0
+official_sdk_count: 0
+note: >-
+  Rad Power Bikes publishes no first-party client libraries. npm registry search for
+  "rad-power-bikes" returned no package owned by or naming the company; pypi.org/pypi/
+  radpowerbikes/json returned 404; no SDK, CLI or SourceCode link exists in the company's
+  agent instructions, robots.txt or UCP discovery document, and no GitHub organization is
+  linked from any Rad Power Bikes host. Integration is expected to happen through a generic
+  MCP client or the cross-store Shop skill, not through a vendor SDK. Every field is
+  recorded as checked-and-empty rather than omitted.
+packages: []
+third_party_clients:
+  note: >-
+    The store's own llms.txt recommends https://shop.app/SKILL.md - Shopify's cross-store
+    agent shopping skill - as the preferred client. That is Shopify's artifact, not Rad Power
+    Bikes', so it is recorded here as context and not as a first-party package.
+  url: https://shop.app/SKILL.md

@@ -1,0 +1,121 @@
+generated: '2026-08-26'
+method: probed
+source: https://www.radpowerbikes.com/api/ucp/mcp (JSON-RPC tools/list, HTTP 200, anonymous)
+name: Rad Power Bikes UCP Commerce MCP
+status: live
+summary: >-
+  Rad Power Bikes serves a live, anonymous MCP endpoint on its own domain implementing the
+  Universal Commerce Protocol (UCP) shopping service. An unauthenticated POST of
+  {"jsonrpc":"2.0","id":1,"method":"tools/list"} returned HTTP 200 with 13 tools and full
+  JSON Schema draft 2020-12 inputSchemas. This is the provider's only machine-readable API
+  contract; there is no published OpenAPI, GraphQL or partner API program.
+ownership:
+  verdict: belongs-to-provider
+  note: >-
+    The endpoint is served from the company's own host (www.radpowerbikes.com) and the UCP
+    discovery document names the store's own Shopify domain (rad-power-bikes.myshopify.com),
+    merchant_name "Rad Power Bikes", merchant_origin www.radpowerbikes.com and shop_id
+    7999645. The protocol implementation itself is Shopify platform infrastructure
+    provisioned per-store — the legitimate templated/platform case — but the endpoint,
+    catalog, cart, checkout and payment handlers are Rad Power Bikes' own.
+deployment:
+  mode: remote
+  endpoint: https://www.radpowerbikes.com/api/ucp/mcp
+  alternate_endpoint: https://rad-power-bikes.myshopify.com/api/ucp/mcp
+  install: ''
+  package: ''
+  auth: none
+  verified: probed
+discovery:
+  ucp_well_known: https://www.radpowerbikes.com/.well-known/ucp
+  ucp_versioned: https://www.radpowerbikes.com/.well-known/ucp/2026-04-08
+  agents_md: https://www.radpowerbikes.com/agents.md
+  llms_txt: https://www.radpowerbikes.com/llms.txt
+  robots_txt: https://www.radpowerbikes.com/robots.txt
+protocol:
+  family: Universal Commerce Protocol (UCP)
+  spec: https://ucp.dev/2026-04-08/specification/overview/
+  version: '2026-04-08'
+  supported_versions:
+  - '2026-04-08'
+  - '2026-01-23'
+  transport: mcp
+  schema: https://ucp.dev/2026-04-08/services/shopping/mcp.openrpc.json
+  capabilities:
+  - dev.ucp.shopping.catalog.search
+  - dev.ucp.shopping.catalog.lookup
+  - dev.ucp.shopping.cart
+  - dev.ucp.shopping.checkout
+  - dev.ucp.shopping.fulfillment
+  - dev.ucp.shopping.discount
+  - dev.ucp.shopping.order
+  - dev.shopify.catalog
+  payment_handlers:
+  - id: gpay
+    handler: com.google.pay
+    version: '2026-01-11'
+  - id: shopify.card
+    handler: dev.shopify.card
+    version: '2026-01-15'
+  - id: shop_pay
+    handler: dev.shopify.shop_pay
+    version: '2026-04-08'
+tools_manifest: mcp/rad-power-bikes-tools-list.json
+tool_count: 13
+tools:
+- name: search_catalog
+  category: catalog
+  description: Search store products by natural-language query and/or filters; cursor-paginated.
+- name: lookup_catalog
+  category: catalog
+  description: Look up multiple products or variants by identifier.
+- name: get_product
+  category: catalog
+  description: Retrieve complete product detail by identifier.
+- name: create_cart
+  category: cart
+  description: Create a new cart.
+- name: get_cart
+  category: cart
+  description: Get cart contents.
+- name: update_cart
+  category: cart
+  description: Perform updates to a cart.
+- name: cancel_cart
+  category: cart
+  description: Cancel a cart.
+- name: create_checkout
+  category: checkout
+  description: Create a checkout; returns line items, totals, discounts and taxes.
+- name: get_checkout
+  category: checkout
+  description: Return checkout detail including line items, totals, discounts and taxes.
+- name: update_checkout
+  category: checkout
+  description: Update a checkout (e.g. shipping address and fulfillment method).
+- name: complete_checkout
+  category: checkout
+  description: >-
+    Complete a checkout and return order ID / Thank You Page URL or errors. Requires
+    meta.idempotency-key. Buyer approval is mandatory per the store's published agent rules.
+- name: cancel_checkout
+  category: checkout
+  description: Cancel a checkout.
+- name: get_order
+  category: order
+  description: Get the details of an order.
+agent_rules:
+  human_approval_required: true
+  source: https://www.radpowerbikes.com/llms.txt
+  note: >-
+    Both llms.txt and robots.txt state that agents must not complete checkout, payment or
+    order placement without an explicit, contemporaneous human approval step, and direct
+    "buy-for-me" agents to the Shop skill at https://shop.app/SKILL.md instead of scripting
+    the storefront.
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://www.radpowerbikes.com/api/ucp/mcp
+  method: POST tools/list
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  bytes: 52007

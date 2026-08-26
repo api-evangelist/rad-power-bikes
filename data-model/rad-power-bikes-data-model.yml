@@ -1,0 +1,105 @@
+generated: '2026-08-26'
+method: derived
+source: mcp/rad-power-bikes-tools-list.json (live tools/list 2026-08-26)
+summary: >-
+  Entity graph derived from the 13 UCP/MCP tool input schemas. There is no OpenAPI, so
+  entities and relationships are read from the tool argument shapes and the UCP capability
+  declarations in /.well-known/ucp.
+entities:
+- name: Product
+  description: A catalog item in the online store, addressed by identifier or handle.
+  reached_by:
+  - search_catalog
+  - lookup_catalog
+  - get_product
+  also_available_as: >-
+    Public Shopify JSON at /products/{handle}.json and
+    /collections/{handle}/products.json, and as schema.org Product JSON-LD on the product page.
+- name: Variant
+  description: A purchasable variation of a Product, addressed by its own identifier.
+  reached_by:
+  - lookup_catalog
+- name: Cart
+  description: A mutable collection of line items prior to checkout.
+  reached_by:
+  - create_cart
+  - get_cart
+  - update_cart
+  - cancel_cart
+- name: LineItem
+  description: A quantity of a Variant held inside a Cart or Checkout.
+  reached_by: []
+- name: Checkout
+  description: >-
+    A priced, addressable purchase intent carrying line items, totals, taxes, discounts,
+    fulfillment selection and payment instruments.
+  reached_by:
+  - create_checkout
+  - get_checkout
+  - update_checkout
+  - complete_checkout
+  - cancel_checkout
+- name: PaymentInstrument
+  description: >-
+    A tokenized payment credential attached to a Checkout, issued by a declared payment
+    handler (gpay, shopify.card, shop_pay). Carries id, handler_id, type, credential and
+    billing_address.
+  reached_by:
+  - create_checkout
+  - update_checkout
+- name: Address
+  description: >-
+    Billing or shipping address - street_address, extended_address, address_locality,
+    address_region, postal_code, address_country (ISO 3166-1 alpha-2), first_name, last_name.
+  reached_by:
+  - create_checkout
+  - update_checkout
+- name: Order
+  description: The completed result of a Checkout, addressed by order ID.
+  reached_by:
+  - get_order
+- name: AgentProfile
+  description: >-
+    The calling agent's UCP profile URI, required as meta.ucp-agent.profile on every tool.
+    Identity metadata rather than a stored resource.
+  reached_by: []
+relationships:
+- from: Cart
+  to: LineItem
+  type: has_many
+  via: cart.line_items
+- from: LineItem
+  to: Variant
+  type: belongs_to
+  via: variant identifier
+- from: Variant
+  to: Product
+  type: belongs_to
+  via: product identifier
+- from: Checkout
+  to: LineItem
+  type: has_many
+  via: checkout.line_items
+- from: Checkout
+  to: PaymentInstrument
+  type: has_many
+  via: checkout.payment.instruments
+- from: PaymentInstrument
+  to: Address
+  type: has_one
+  via: billing_address
+- from: Checkout
+  to: Address
+  type: has_one
+  via: shipping address set through update_checkout
+- from: Order
+  to: Checkout
+  type: belongs_to
+  via: complete_checkout result order ID
+money:
+  representation: integer minor units paired with an ISO 4217 currency code
+  example: '{"amount": 2500, "currency": "USD"} == $25.00'
+gaps:
+- No customer/account entity is reachable anonymously; buyer identity lives behind the
+  Shopify Customer Accounts OIDC surface.
+- No subscription, return or refund entity is exposed by any tool.

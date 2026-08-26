@@ -1,0 +1,16 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.radpowerbikes.com/agents.md
+plan_count: 0
+note: >-
+  Rad Power Bikes publishes no API plans, tiers, quotas or developer pricing of any kind.
+  There is no developer program to price. The UCP/MCP commerce endpoint is offered free and
+  anonymous as a sales channel for the retail store - the money is in the bikes, not in API
+  access. The company's public pricing pages price physical products (ebikes, parts,
+  accessories, protection plans), which is product pricing rather than API plan pricing and
+  is therefore not modelled here.
+plans: []
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://www.radpowerbikes.com/agents.md
+  http_status: 200

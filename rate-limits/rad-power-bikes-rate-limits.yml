@@ -1,0 +1,23 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.radpowerbikes.com/llms.txt
+limit_count: 0
+note: >-
+  Rad Power Bikes documents that a rate limit EXISTS but publishes no number, no window and
+  no response headers. llms.txt states verbatim - "Respect rate limits. The MCP endpoint is
+  rate-limited per IP. Back off on 429 responses." No X-RateLimit-* or RateLimit-* headers
+  were observed on the anonymous tools/list response, and no Retry-After was returned. An
+  agent therefore has a documented status code to react to and nothing to plan against.
+limits: []
+signaling:
+  documented: true
+  scope: per-ip
+  status_on_exhaustion: 429
+  headers_observed: []
+  headers_documented: []
+  retry_after: not published
+  guidance: 'exponential backoff on 429 (provider wording - "Back off on 429 responses")'
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://www.radpowerbikes.com/llms.txt
+  http_status: 200

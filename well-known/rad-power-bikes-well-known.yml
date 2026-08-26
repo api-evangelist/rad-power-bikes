@@ -1,0 +1,56 @@
+generated: '2026-08-26'
+method: probed
+source: live GET probes of /.well-known/* on every apis.yml host
+note: >-
+  radpowerbikes.com is a Shopify storefront. It serves real OAuth 2.0 / OIDC discovery
+  documents for Shopify Customer Accounts, an RFC 9728 protected-resource document, and a
+  Universal Commerce Protocol merchant profile at the non-IETF path /.well-known/ucp.
+  security.txt, api-catalog, ai-plugin.json and both A2A agent-card paths return 404 with
+  the Shopify HTML 404 page.
+hosts:
+- host: www.radpowerbikes.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: rad-power-bikes-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: rad-power-bikes-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: rad-power-bikes-oauth-protected-resource.json
+  - path: /.well-known/ucp
+    status: 200
+    file: rad-power-bikes-ucp.json
+  - path: /.well-known/security.txt
+    status: 404
+    file: ''
+  - path: /.well-known/api-catalog
+    status: 404
+    file: ''
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: ''
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: ''
+  - path: /.well-known/agent.json
+    status: 404
+    file: ''
+- host: account.radpowerbikes.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: ''
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: ''
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: rad-power-bikes-account-oauth-protected-resource.json
+  - path: /.well-known/security.txt
+    status: 404
+    file: ''
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: ''

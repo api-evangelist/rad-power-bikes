@@ -1,18 +1,73 @@
 aid: rad-power-bikes
 name: Rad Power Bikes
-description: 'Rad Power Bikes is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Rad Power Bikes is a Seattle-based direct-to-consumer electric bicycle maker, selling
+  cargo, utility, commuter and off-road ebikes plus parts, accessories and service plans
+  through its own online store and a small network of RadRetail locations. The company
+  filed for Chapter 11 in December 2025 and its assets were acquired by Life Electric
+  Vehicles Holdings in March 2026; the store continues to operate at radpowerbikes.com.
+  Rad Power Bikes publishes no developer program, no public REST OpenAPI and no partner
+  API portal. It does, however, expose a real, anonymous, machine-readable agent commerce
+  surface on its own domain: a Universal Commerce Protocol (UCP) discovery document at
+  /.well-known/ucp, agent instructions at /agents.md and /llms.txt, and a live MCP endpoint
+  at /api/ucp/mcp that answers tools/list without credentials with 13 catalog, cart,
+  checkout and order tools. That surface is Shopify platform infrastructure, provisioned
+  per-store and served from the merchant's own hosts.
 url: https://raw.githubusercontent.com/api-evangelist/rad-power-bikes/refs/heads/main/apis.yml
+image: https://cdn.shopify.com/s/files/1/0799/9645/files/RPB-logo-US_1af3a809-34a2-4783-bb7f-12074e8c0357.png?v=1626972856
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
-apis: []
+- Electric Bikes
+- Micromobility
+- Ecommerce
+- Retail
+- Consumer Products
+- Agentic Commerce
+- Shopify
+- MCP
+- Universal Commerce Protocol
+apis:
+- name: Rad Power Bikes UCP Commerce MCP
+  description: >-
+    The Universal Commerce Protocol (UCP) shopping service for the Rad Power Bikes online
+    store, exposed over MCP. Anonymous tools/list returns 13 tools covering catalog search
+    and lookup, product detail, cart create/read/update/cancel, and checkout
+    create/read/update/complete/cancel plus order lookup. Checkout completion requires
+    contemporaneous human buyer approval per the store's own published agent rules.
+  humanURL: https://www.radpowerbikes.com/agents.md
+  baseURL: https://www.radpowerbikes.com/api/ucp/mcp
+  tags:
+  - Agentic Commerce
+  - MCP
+  - Ecommerce
+  - Catalog
+  - Checkout
+  properties:
+  - type: MCPServer
+    url: mcp/rad-power-bikes-mcp.yml
+  - type: LLMsTxt
+    url: llms/rad-power-bikes-llms.txt
+  - type: Authentication
+    url: authentication/rad-power-bikes-authentication.yml
+  - type: Conventions
+    url: conventions/rad-power-bikes-conventions.yml
+  - type: Idempotency
+    url: conventions/rad-power-bikes-conventions.yml
+  - type: RateLimits
+    url: rate-limits/rad-power-bikes-rate-limits.yml
+  - type: Conformance
+    url: conformance/rad-power-bikes-conformance.yml
+  - type: OAuthScopes
+    url: scopes/rad-power-bikes-scopes.yml
+  - type: DataModel
+    url: data-model/rad-power-bikes-data-model.yml
+  - type: ErrorCatalog
+    url: errors/rad-power-bikes-problem-types.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +75,33 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/rad-power-bikes_stock/
+  url: https://www.radpowerbikes.com/
+- type: Documentation
+  url: https://www.radpowerbikes.com/agents.md
+- type: GettingStarted
+  url: https://www.radpowerbikes.com/llms.txt
+- type: Support
+  url: https://www.radpowerbikes.com/pages/support
+- type: Blog
+  url: https://www.radpowerbikes.com/blogs/the-scenic-route
+- type: SignUp
+  url: https://www.radpowerbikes.com/account/login
+- type: TermsOfService
+  url: https://www.radpowerbikes.com/policies/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.radpowerbikes.com/policies/privacy-policy
+- type: WellKnown
+  url: well-known/rad-power-bikes-well-known.yml
+- type: Plans
+  url: plans/rad-power-bikes-plans-pricing.yml
+- type: Lifecycle
+  url: lifecycle/rad-power-bikes-lifecycle.yml
+- type: DomainSecurity
+  url: security/rad-power-bikes-domain-security.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 17
+  pass: local-v1

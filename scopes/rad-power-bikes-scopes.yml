@@ -1,0 +1,27 @@
+generated: '2026-08-26'
+method: probed
+source: https://www.radpowerbikes.com/.well-known/openid-configuration
+note: >-
+  Scopes are read verbatim from the store's own OpenID Connect discovery document
+  (scopes_supported). Shopify Customer Accounts uses coarse full-access scopes rather than a
+  granular per-resource scope catalog; there is no published scope reference page for this
+  merchant because there is no public developer program.
+authorization_server: https://shopify.com/authentication/7999645
+authorization_endpoint: https://account.radpowerbikes.com/authentication/oauth/authorize
+token_endpoint: https://account.radpowerbikes.com/authentication/oauth/token
+flows:
+- authorization_code
+- refresh_token
+scope_count: 4
+scopes:
+- name: openid
+  description: Standard OIDC scope requesting an ID token for the authenticated customer.
+- name: email
+  description: Release the customer's email address and email_verified claim.
+- name: customer-account-api:full
+  description: Full access to the Shopify Customer Account API on behalf of the signed-in customer.
+- name: customer-account-mcp-api:full
+  description: >-
+    Full access to the Shopify Customer Account MCP API on behalf of the signed-in customer
+    — the authenticated, buyer-scoped counterpart to the anonymous storefront UCP MCP
+    endpoint.

@@ -1,0 +1,51 @@
+generated: '2026-08-26'
+method: probed
+source: https://www.radpowerbikes.com/.well-known/ucp
+summary: >-
+  Versioning is inherited from the Universal Commerce Protocol and advertised in the store's
+  own UCP discovery document. The merchant publishes no changelog, no deprecation policy, no
+  SLA and no status page of its own.
+versioning:
+  scheme: date-based protocol version
+  current: '2026-04-08'
+  supported:
+  - version: '2026-04-08'
+    profile: https://rad-power-bikes.myshopify.com/.well-known/ucp/2026-04-08
+    status: latest stable
+  - version: '2026-01-23'
+    profile: https://rad-power-bikes.myshopify.com/.well-known/ucp/2026-01-23
+    status: supported
+  negotiation: >-
+    An agent reads /.well-known/ucp, picks a supported version and fetches the versioned
+    profile. Two versions were live simultaneously on 2026-08-26, so the store does run an
+    overlap window - but its length is not published.
+  spec_owner: https://ucp.dev
+deprecation_policy:
+  published: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  note: >-
+    No RFC 8594 Sunset/Deprecation headers were returned and no deprecation policy page
+    exists. The only observable signal is a version disappearing from supported_versions in
+    the UCP discovery document.
+status_page:
+  published: false
+  probed: https://status.radpowerbikes.com/
+  status: '000'
+  note: DNS did not resolve; no status page exists for this merchant.
+sla:
+  published: false
+changelog:
+  published: false
+  probed: https://www.radpowerbikes.com/pages/changelog
+  status: 404
+deprecated_operations: []
+corporate_lifecycle:
+  note: >-
+    Rad Power Bikes filed Chapter 11 in December 2025; its assets were auctioned for $13.2M
+    and acquired by Life Electric Vehicles Holdings Inc., closing 2026-03-05. The storefront
+    and the agent commerce surface profiled here were live and answering on 2026-08-26 under
+    the new ownership. This is company lifecycle context, not an API deprecation signal.
+  sources:
+  - https://techcrunch.com/2026/03/06/life-ev-officially-owns-rad-power-bikes-now/
+  - https://www.geekwire.com/2026/rad-power-bikes-asset-auction-attracts-two-successful-bidders-as-part-of-e-bike-makers-bankruptcy/
