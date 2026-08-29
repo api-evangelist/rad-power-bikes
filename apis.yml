@@ -14,6 +14,17 @@ description: >-
   checkout and order tools. That surface is Shopify platform infrastructure, provisioned
   per-store and served from the merchant's own hosts.
 url: https://raw.githubusercontent.com/api-evangelist/rad-power-bikes/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cdn.shopify.com/s/files/1/0799/9645/files/RPB-logo-US_1af3a809-34a2-4783-bb7f-12074e8c0357.png?v=1626972856
 x-type: company
 x-source: harvest:secondary-market
