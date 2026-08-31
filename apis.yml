@@ -35,6 +35,17 @@ tags:
 - Company
 - Electric Bikes
 - Micromobility
+- E-Commerce
+- Retail
+- Consumer Products
+- Agentic Commerce
+- Shopify
+- MCP
+- Universal Commerce Protocol
+tags_raw:
+- Company
+- Electric Bikes
+- Micromobility
 - Ecommerce
 - Retail
 - Consumer Products
@@ -53,6 +64,12 @@ apis:
   humanURL: https://www.radpowerbikes.com/agents.md
   baseURL: https://www.radpowerbikes.com/api/ucp/mcp
   tags:
+  - Agentic Commerce
+  - MCP
+  - E-Commerce
+  - Catalog
+  - Checkout
+  tags_raw:
   - Agentic Commerce
   - MCP
   - Ecommerce
