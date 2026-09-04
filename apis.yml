@@ -25,6 +25,21 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source:
+  - authentication
+  - scopes
+  - rate-limits
+  - security
+  generated: '2026-09-03'
+  method: derived
 image: https://cdn.shopify.com/s/files/1/0799/9645/files/RPB-logo-US_1af3a809-34a2-4783-bb7f-12074e8c0357.png?v=1626972856
 x-type: company
 x-source: harvest:secondary-market
